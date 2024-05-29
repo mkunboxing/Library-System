@@ -165,15 +165,11 @@ const Contacts = () => {
       field: "registrationNumber",
       headerName: "Reg.No",
       flex: 0.5,
-      headerAlign: "center",
-      align: "center",
     },
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
+      flex: 0.5,
       cellClassName: "name-column--cell",
       editable: true,
       renderCell: (params) => {
@@ -193,10 +189,10 @@ const Contacts = () => {
     {
       field: "phoneNo",
       headerName: "Phone Number",
-      flex: 1,
+      flex: 0.5,
       editable: true,
-      headerAlign: "center",
-      align: "center",
+      // headerAlign: "center",
+      // align: "center",
     },
     {
       field: "email",
@@ -208,17 +204,17 @@ const Contacts = () => {
     {
       field: "address",
       headerName: "Address",
-      flex: 1,
+      flex: 0.5,
       editable: true,
-      headerAlign: "center",
-      align: "center",
+      // headerAlign: "center",
+      // align: "center",
     },
     {
       field: "preparationType",
       headerName: "Preparation Type",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      flex: 0.5,
       editable: true,
     },
     {
@@ -231,7 +227,7 @@ const Contacts = () => {
       editable: true,
     },
     { field: "time", headerName: "Time", flex: 0.5, editable: true },
-    { field: "status", headerName: "Status", flex: 0.5, editable: true },
+    { field: "status", headerName: "Status", flex: 0.3, editable: true },
     {
       field: "actions",
       headerName: "Actions",
@@ -313,6 +309,7 @@ const Contacts = () => {
         {renderConfirmDialog()}
         {renderDeleteDialog()}
         <DataGrid
+        // style={{ height: 400, width: '100%', overflow: 'auto' }}
           rows={rows}
           columns={columns}
           density="comfortable"
