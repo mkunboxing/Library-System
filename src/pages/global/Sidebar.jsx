@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
@@ -83,8 +83,6 @@ const Sidebar = () => {
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
         },
-        // height: "100vh", // Set height to 100% of viewport height
-        // overflowY: "hidden", // Prevent vertical scrolling
       }}
     >
       <ProSidebar collapsed={isCollapsed}>
@@ -102,7 +100,6 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                
               >
                 <Typography variant="h3" color={colors.grey[100]}>
                   Library System
