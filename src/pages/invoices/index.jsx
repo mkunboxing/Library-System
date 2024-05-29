@@ -257,6 +257,9 @@ const Invoices = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
+          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
+            overflow: `visible !important`,
+          },
         }}
       >
         <DataGrid  rows={invoices} columns={columns} getRowId={(row) => row._id} />

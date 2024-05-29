@@ -236,12 +236,15 @@ const Contacts = () => {
       field: "actions",
       headerName: "Actions",
       flex: 0.5,
+      headerAlign: "left",
+      align: "left",
 
       renderCell: (params) => {
         return (
           <Button
             variant="contained"
             color="secondary"
+            sx={{ overflow: "visible" }}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
@@ -252,7 +255,7 @@ const Contacts = () => {
   ];
 
   return (
-    <Box m={"15px"}>
+    <Box  m={"15px"}>
       <Box display="flex" flexDirection="column">
         <Box>
           <Header
@@ -272,8 +275,12 @@ const Contacts = () => {
       </Box>
 
       <Box
-        m="20px 0 0 0"
-        height="75vh"
+        mt={"10px"}
+        // display={"flex"}
+        border={"1px solid red"}
+        height= {"70vh"}
+        // width={"100%"}
+        overflow={"auto"}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -300,6 +307,9 @@ const Contacts = () => {
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
+          },
+          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
+            overflow: `visible !important`,
           },
         }}
       >
