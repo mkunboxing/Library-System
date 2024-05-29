@@ -28,12 +28,12 @@ const Contacts = () => {
   const noButtonRef = useRef(null);
   const navigate = useNavigate();
 
-  const backendURL =  process.env.REACT_APP_BACKEND_URL
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${backendURL}/students`); 
+        const response = await axios.get(`${backendURL}/students`);
         // Add Serial No to each row
         setRows(response.data);
         setLoading(false);
@@ -71,7 +71,10 @@ const Contacts = () => {
 
     try {
       await axios.put(`${backendURL}/students/${newRow._id}`, newRow);
-      setSnackbar({ children: "User successfully Updated", severity: "success" });
+      setSnackbar({
+        children: "User successfully Updated",
+        severity: "success",
+      });
       resolve(newRow);
     } catch (error) {
       setSnackbar({ children: "Error saving user", severity: "error" });
@@ -157,8 +160,7 @@ const Contacts = () => {
     {
       field: "srNo",
       headerName: "Sr. No.",
-      valueGetter: (params) =>
-        `${params.api.getRowIndex(params.row._id) + 1}`,
+      valueGetter: (params) => `${params.api.getRowIndex(params.row._id) + 1}`,
       width: 80,
     },
     {
@@ -250,7 +252,7 @@ const Contacts = () => {
   ];
 
   return (
-    <Box  m={"15px"}>
+    <Box m={"15px"}>
       <Box display="flex" flexDirection="column">
         <Box>
           <Header
@@ -268,12 +270,14 @@ const Contacts = () => {
           </Button>
         </Box>
       </Box>
-
       <Box
+        // border={"1px solid red"}
         mt={"10px"}
-        // display={"flex"}
-        height= {"70vh"}
-        // width={"100%"}
+        display={"flex"}
+        height={"70vh"}
+        overflow={"visible"}
+        minWidth={"800px"}
+        width={"100%"}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -301,15 +305,16 @@ const Contacts = () => {
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
           },
-          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
-            overflow: `visible !important`,
-          },
+          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
+            {
+              overflow: `visible !important`,
+            },
         }}
       >
         {renderConfirmDialog()}
         {renderDeleteDialog()}
         <DataGrid
-        // style={{ height: 400, width: '100%', overflow: 'auto' }}
+          // style={{ height: 400, width: '100%', overflow: 'auto' }}
           rows={rows}
           columns={columns}
           density="comfortable"
@@ -329,8 +334,25 @@ const Contacts = () => {
               ".MuiDataGrid-main": { color: "black" },
             },
           }}
-          componentsProps={{ toolbar: { csvOptions: { fields: ["serialNo","registrationNumber","name", "age", "phoneNo", "address", "preparationType", "fee", "time"] } } }}
+          componentsProps={{
+            toolbar: {
+              csvOptions: {
+                fields: [
+                  "serialNo",
+                  "registrationNumber",
+                  "name",
+                  "age",
+                  "phoneNo",
+                  "address",
+                  "preparationType",
+                  "fee",
+                  "time",
+                ],
+              },
+            },
+          }}
         />
+
         {!!snackbar && (
           <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={5000}>
             <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>

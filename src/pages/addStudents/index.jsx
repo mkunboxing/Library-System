@@ -19,10 +19,12 @@ const Form = () => {
     return `${day}${month}${year}${minutes}${seconds}`;
   };
 
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
+
   const handleFormSubmit = async (values, actions) => {
     values.registrationNumber = generateRegistrationNumber(); // Regenerate registration number
     try {
-      const response = await axios.post('http://localhost:8000/students', values);
+      const response = await axios.post(`${backendURL}/students`, values);
       console.log(response.data);
       // Show a success message or handle the response as needed
       actions.resetForm({
