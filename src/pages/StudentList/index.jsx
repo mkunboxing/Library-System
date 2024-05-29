@@ -244,7 +244,6 @@ const Contacts = () => {
           <Button
             variant="contained"
             color="secondary"
-            sx={{ overflow: "visible" }}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
@@ -277,10 +276,8 @@ const Contacts = () => {
       <Box
         mt={"10px"}
         // display={"flex"}
-        border={"1px solid red"}
         height= {"70vh"}
         // width={"100%"}
-        overflow={"auto"}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
