@@ -29,8 +29,6 @@ const Dashboard = () => {
       const profitsResponse = await axios.get(`${backendURL}/invoices/profit`);
       const invoicesResponse = await axios.get(`${backendURL}/invoices`);
 
-      console.log(revenueResponse.data);
-
       setStudentsCount(studentsResponse.data.count);
       setTotalRevenue(revenueResponse.data.totalRevenue);
       setTotalProfits(profitsResponse.data.totalProfit);
