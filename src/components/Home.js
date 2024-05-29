@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Topbar from "../pages/global/Topbar";
 import Sidebar from "../pages/global/Sidebar";
@@ -10,18 +10,19 @@ import Form from "../pages/addStudents";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "../theme";
 import Calendar from "../pages/calendar/calendar";
+
 function Home() {
   const [theme, colorMode] = useMode();
-  const [isSidebar, setIsSidebar] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          <Sidebar isSidebar={isSidebar} />
+          <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
           <main className="content">
-            <Topbar setIsSidebar={setIsSidebar} />
+            <Topbar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />
