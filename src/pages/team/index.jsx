@@ -221,7 +221,7 @@ const Team = () => {
   ];
 
   return (
-    <Box m="15px">
+    <Box sx={{overflowY:"hidden"}} m="15px">
       <Box display="flex" flexDirection="column">
         <Box>
           <Header title="STAFF" subtitle="List of Staff Members" />
@@ -234,7 +234,8 @@ const Team = () => {
       </Box>
       <Box
         m="40px 0 0 0"
-        height="75vh"
+        height="70vh"
+        minWidth={800}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -260,7 +261,7 @@ const Team = () => {
             color: `${colors.greenAccent[200]} !important`,
           },
           "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
-            overflow: `visible !important`,
+            // overflow: `visible !important`,
           },
         }}
       >

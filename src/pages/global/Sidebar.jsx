@@ -46,23 +46,29 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     switch (location.pathname) {
       case "/form":
         setSelected("Profile Form");
+        setIsCollapsed(isMobile);
         break;
       case "/team":
         setSelected("Manage Staffs");
+        setIsCollapsed(isMobile);
         break;
       case "/contacts":
         setSelected("Students List");
+        setIsCollapsed(isMobile);
         break;
       case "/invoices":
         setSelected("Invoices Balances");
+        setIsCollapsed(isMobile);
         break;
       case "/calendar":
         setSelected("Calendar");
+        setIsCollapsed(isMobile);
         break;
       default:
         setSelected("Dashboard");
+        setIsCollapsed(isMobile);
     }
-  }, [location.pathname]);
+  }, [location.pathname, isMobile, setIsCollapsed]);
 
   return (
     <Box

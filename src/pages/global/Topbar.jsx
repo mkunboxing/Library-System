@@ -26,16 +26,16 @@ const Topbar = ({ isCollapsed, setIsCollapsed }) => {
   };
 
   return (
-    <Box backgroundColor={colors.primary[400]} display="flex" justifyContent="space-between" p={1}>
+    <Box  backgroundColor={colors.primary[400]} display="flex" justifyContent="space-between" p={1}>
       <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
         <MenuOutlinedIcon />
       </IconButton>
 
-      <Box display="flex" justifyContent={"space-between"}>
+      <Box >
         <IconButton onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
         </IconButton>
-        <IconButton>
+        <IconButton sx={{ marginRight: "10px" }}>
           <LogoutIcon onClick={handleLogout} />
         </IconButton>
       </Box>

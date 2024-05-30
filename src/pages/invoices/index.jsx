@@ -235,7 +235,7 @@ const Invoices = () => {
   ];
 
   return (
-    <Box m="15px">
+    <Box sx={{overflowY:"hidden"}} m="15px">
       <Box display="flex" flexDirection={"column"}>
         <Box>
           <Header title="INVOICES" subtitle="List of Invoices" />
@@ -248,10 +248,12 @@ const Invoices = () => {
       </Box>
       <Box
         m="40px 0 0 0"
-        height="75vh"
+        height="70vh"
+        minWidth={800}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
+            // minWidth: "800px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",

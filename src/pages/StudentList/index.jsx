@@ -179,12 +179,12 @@ const Contacts = () => {
     {
       field: "name",
       headerName: "Name",
-      flex: 0.5,
+      flex: 0.9,
+      // minWidth: 100,
+      headerAlign: "left",
+      align: "left",
       cellClassName: "name-column--cell",
       editable: true,
-      renderCell: (params) => {
-        return <strong>{params.value}</strong>;
-      },
     },
     {
       field: "age",
@@ -241,7 +241,7 @@ const Contacts = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 0.8,
       headerAlign: "left",
       align: "left",
 
@@ -260,7 +260,7 @@ const Contacts = () => {
   ];
 
   return (
-    <Box m={"15px"}>
+    <Box sx={{overflowY:"hidden"}} m={"15px"}>
       <Box display="flex" flexDirection="column">
         <Box>
           <Header
@@ -279,15 +279,13 @@ const Contacts = () => {
         </Box>
       </Box>
       <Box
-        // border={"1px solid red"}
         mt={"10px"}
-        display={"flex"}
         height={"70vh"}
-        overflow={"visible"}
-        width={"100%"}
-        minWidth={"800px"}
-        
+        // overflow={"visible"}
+        // width={"100%"}
+        minWidth={800}
         sx={{
+          width :"100%", overflowX:"auto", minWidth: "800px",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -316,7 +314,7 @@ const Contacts = () => {
           },
           "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
             {
-              overflow: `visible !important`,
+              // overflow: `visible !important`,
             },
         }}
       >
