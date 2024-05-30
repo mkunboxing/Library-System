@@ -25,6 +25,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useLoading } from "../../LoadingContext";
 
 const Invoices = () => {
   const theme = useTheme();
@@ -46,6 +47,9 @@ const Invoices = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  const { setIsLoading } = useLoading();
+  const [loading, setLoading] = useState(true);
+
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -53,11 +57,16 @@ const Invoices = () => {
   }, []);
 
   const fetchInvoices = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${backendURL}/invoices`);
       setInvoices(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching invoices:", error);
+      setLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -160,11 +169,10 @@ const Invoices = () => {
     {
       field: "srNo",
       headerName: "Sr. No.",
-      valueGetter: (params) =>
-        `${params.api.getRowIndex(params.row._id) + 1}`,
+      valueGetter: (params) => `${params.api.getRowIndex(params.row._id) + 1}`,
       width: 80,
     },
-    {field: "type", headerName: "Type", flex: 1,},
+    { field: "type", headerName: "Type", flex: 1 },
     {
       field: "name",
       headerName: "Name",
@@ -196,7 +204,9 @@ const Invoices = () => {
       headerName: "Date",
       flex: 1,
       renderCell: (params) => (
-        <Typography>{new Date(params.row.date).toLocaleDateString()}</Typography>
+        <Typography>
+          {new Date(params.row.date).toLocaleDateString()}
+        </Typography>
       ),
     },
     {
@@ -206,10 +216,16 @@ const Invoices = () => {
       renderCell: (params) => {
         return (
           <Box>
-            <IconButton onClick={() => handleEdit(params.row._id)} color="primary">
+            <IconButton
+              onClick={() => handleEdit(params.row._id)}
+              color="primary"
+            >
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => handleDelete(params.row._id)} color="error">
+            <IconButton
+              onClick={() => handleDelete(params.row._id)}
+              color="error"
+            >
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -220,7 +236,7 @@ const Invoices = () => {
 
   return (
     <Box m="15px">
-      <Box display="flex" flexDirection={"column"} >
+      <Box display="flex" flexDirection={"column"}>
         <Box>
           <Header title="INVOICES" subtitle="List of Invoices" />
         </Box>
@@ -257,16 +273,24 @@ const Invoices = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
-            overflow: `visible !important`,
-          },
+          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
+            {
+              overflow: `visible !important`,
+            },
         }}
       >
-        <DataGrid  rows={invoices} columns={columns} getRowId={(row) => row._id} />
+        <DataGrid
+          rows={invoices}
+          columns={columns}
+          getRowId={(row) => row._id}
+          loading={loading}
+        />
       </Box>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{editMode ? "Edit Invoice" : "Add New Invoice"}</DialogTitle>
+        <DialogTitle>
+          {editMode ? "Edit Invoice" : "Add New Invoice"}
+        </DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <FormControl fullWidth sx={{ mb: 2 }}>
@@ -323,7 +347,7 @@ const Invoices = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: 'white' }}>
+          <Button onClick={handleClose} sx={{ color: "white" }}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="secondary" variant="contained">

@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, Button, IconButton, Typography, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
 import ProfitExpenseChart from "../../components/RevenueChart";
+import { useLoading } from "../../LoadingContext";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -19,10 +27,12 @@ const Dashboard = () => {
   const [studentsCount, setStudentsCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalProfits, setTotalProfits] = useState(0);
+  const { setIsLoading } = useLoading();
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   const fetchDashboardData = async () => {
+    setIsLoading(true);
     try {
       const studentsResponse = await axios.get(`${backendURL}/students/count`);
       const revenueResponse = await axios.get(`${backendURL}/invoices/revenue`);
@@ -35,6 +45,8 @@ const Dashboard = () => {
       setInvoiceData(invoicesResponse.data);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
+    } finally {
+      setIsLoading(false); // stop loading
     }
   };
 
@@ -44,17 +56,27 @@ const Dashboard = () => {
 
   const processChartData = () => {
     const months = [
-      "Jan", "Feb", "March", "April", "May", "June",
-      "July", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
 
-    let monthData = months.map(month => ({
+    let monthData = months.map((month) => ({
       month,
       profit: 0,
-      expense: 0
+      expense: 0,
     }));
 
-    invoiceData.forEach(invoice => {
+    invoiceData.forEach((invoice) => {
       const date = new Date(invoice.date);
       const monthIndex = date.getMonth();
       const type = invoice.type.toLowerCase();
@@ -73,7 +95,12 @@ const Dashboard = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" flexDirection={isMobile ? "column" : "row"}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexDirection={isMobile ? "column" : "row"}
+      >
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
         {/* <Box mt={isMobile ? 2 : 0}>
@@ -192,8 +219,11 @@ const Dashboard = () => {
               </IconButton> */}
             </Box>
           </Box>
-          <Box height="75%" width="100%" m="0">  {/* Adjust the height here */}
-            <ProfitExpenseChart data={processChartData()} />  {/* Adjust the height prop here */}
+          <Box height="75%" width="100%" m="0">
+            {" "}
+            {/* Adjust the height here */}
+            <ProfitExpenseChart data={processChartData()} />{" "}
+            {/* Adjust the height prop here */}
           </Box>
         </Box>
         <Box

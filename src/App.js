@@ -4,6 +4,8 @@ import SignIn from './components/Signin';
 import SignUp from './components/Signup';
 import Home from './components/Home';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import { LoadingProvider } from './LoadingContext';
+// import LoadingBar from './components/LoadingBar';
 
 const auth = getAuth();
 
@@ -23,7 +25,12 @@ function App() {
   },[])
 
   if(user){
-    return <Home />
+    return(
+      
+        <Home /> 
+      
+      
+    ) 
 
   }
   

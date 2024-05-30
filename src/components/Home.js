@@ -10,6 +10,11 @@ import Form from "../pages/addStudents";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "../theme";
 import Calendar from "../pages/calendar/calendar";
+import LoadingBar from "./LoadingBar";
+
+import { LoadingProvider } from '../LoadingContext';
+
+
 
 function Home() {
   const [theme, colorMode] = useMode();
@@ -18,11 +23,16 @@ function Home() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
+      <LoadingProvider>
         <CssBaseline />
         <div className="app">
           <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
           <main className="content">
+            
+            
             <Topbar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
+            <LoadingBar />
+            
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />
@@ -33,6 +43,7 @@ function Home() {
             </Routes>
           </main>
         </div>
+        </LoadingProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

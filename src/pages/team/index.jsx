@@ -19,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Header from "../../components/Header";
 import axios from "axios";
-
+import { useLoading } from "../../LoadingContext";
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -39,6 +39,8 @@ const Team = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [loading, setLoading] = useState(true);
+  const { setIsLoading } = useLoading();
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
@@ -47,11 +49,16 @@ const Team = () => {
   }, []);
 
   const fetchStaff = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${backendURL}/staff`);
       setStaff(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching staff data:", error);
+      setLoading(false);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -261,6 +268,7 @@ const Team = () => {
           rows={staff}
           columns={columns}
           getRowId={(row) => row._id}
+          loading={loading}
         />
       </Box>
 

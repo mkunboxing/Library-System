@@ -16,6 +16,8 @@ import { useTheme } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import { useLoading } from "../../LoadingContext";
+
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -28,10 +30,13 @@ const Contacts = () => {
   const noButtonRef = useRef(null);
   const navigate = useNavigate();
 
+  const { setIsLoading } = useLoading();
+
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(`${backendURL}/students`);
         // Add Serial No to each row
@@ -40,6 +45,9 @@ const Contacts = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
+      }
+      finally {
+        setIsLoading(false);
       }
     };
 
@@ -276,8 +284,9 @@ const Contacts = () => {
         display={"flex"}
         height={"70vh"}
         overflow={"visible"}
-        minWidth={"800px"}
         width={"100%"}
+        minWidth={"800px"}
+        
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
