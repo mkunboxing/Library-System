@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
@@ -12,6 +12,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 // import CloseIcon from "@mui/icons-material/Close";
 import useMediaQuery from "@mui/material/useMediaQuery";
+ import { UserContext } from "../../UserContext"
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -37,6 +38,8 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const [selected, setSelected] = useState("Dashboard");
   const isMobile = useMediaQuery("(max-width:600px)");
   const location = useLocation();
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setIsCollapsed(isMobile);
@@ -71,6 +74,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   }, [location.pathname, isMobile, setIsCollapsed]);
 
   return (
+    <Box  sx={{ backgroundColor: colors.primary[400], overflowX: "hidden"}}>
     <Box
       sx={{
         "& .pro-sidebar-inner": {
@@ -88,9 +92,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
         },
+        
       }}
     >
-      <ProSidebar collapsedWidth={isMobile ? "0" : undefined} collapsed={isCollapsed}>
+      <ProSidebar  collapsedWidth={isMobile ? "0" : undefined} collapsed={isCollapsed}>
         <Menu iconShape="square">
           {/* <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -108,7 +113,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/user.png`}
+                  src={user?.picture}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -119,10 +124,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Mukul
+                 {user?.name}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Library Mangement System
+                  {user?.email}
                 </Typography>
               </Box>
             </Box>
@@ -150,6 +155,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+              
             />
             <Item
               title="Students List"
@@ -197,6 +203,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           </Box>
         </Menu>
       </ProSidebar>
+    </Box>
     </Box>
   );
 };

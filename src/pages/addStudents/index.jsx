@@ -24,7 +24,10 @@ const Form = () => {
   const handleFormSubmit = async (values, actions) => {
     values.registrationNumber = generateRegistrationNumber(); // Regenerate registration number
     try {
-      const response = await axios.post(`${backendURL}/students`, values);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      const response = await axios.post(`${backendURL}/students`, values, config);
       console.log(response.data);
       // Show a success message or handle the response as needed
       actions.resetForm({
@@ -37,7 +40,7 @@ const Form = () => {
   };
 
   return (
-    <Box m="20px" sx={{overflowY: "auto"}}>
+    <Box m="20px" sx={{ overflowX: "scroll"}}>
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
       <Formik
         initialValues={{ ...initialValues, registrationNumber: generateRegistrationNumber() }}
@@ -72,9 +75,9 @@ const Form = () => {
                 error={!!touched.registrationNumber && !!errors.registrationNumber}
                 helperText={touched.registrationNumber && errors.registrationNumber}
                 sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
-                // InputProps={{
-                //   readOnly: true,
-                // }}
+                InputProps={{
+                  readOnly: true,
+                }}
               />
               <TextField
                 fullWidth
@@ -92,15 +95,49 @@ const Form = () => {
               <TextField
                 fullWidth
                 variant="filled"
-                type="number"
-                label="Age"
+                type="text"
+                label="Father's Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.age}
-                name="age"
-                error={!!touched.age && !!errors.age}
-                helperText={touched.age && errors.age}
+                value={values.fatherName}
+                name="fatherName"
+                error={!!touched.fatherName && !!errors.fatherName}
+                helperText={touched.fatherName && errors.fatherName}
                 sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              />
+              <FormControl
+                fullWidth
+                variant="filled"
+                error={!!touched.gender && !!errors.gender}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              >
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  name="gender"
+                  value={values.gender}
+                  onBlur={handleBlur}
+                  onChange={(event) => setFieldValue("gender", event.target.value)}
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="date"
+                label="Date of Birth"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.dob}
+                name="dob"
+                error={!!touched.dob && !!errors.dob}
+                helperText={touched.dob && errors.dob}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 fullWidth
@@ -113,6 +150,19 @@ const Form = () => {
                 name="phoneNo"
                 error={!!touched.phoneNo && !!errors.phoneNo}
                 helperText={touched.phoneNo && errors.phoneNo}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Guardian Phone Number"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.guardianPhoneNo}
+                name="guardianPhoneNo"
+                error={!!touched.guardianPhoneNo && !!errors.guardianPhoneNo}
+                helperText={touched.guardianPhoneNo && errors.guardianPhoneNo}
                 sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
               />
               <TextField
@@ -145,6 +195,19 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="text"
+                label="Qualification"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.qualification}
+                name="qualification"
+                error={!!touched.qualification && !!errors.qualification}
+                helperText={touched.qualification && errors.qualification}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
                 label="Preparation Type"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -152,7 +215,7 @@ const Form = () => {
                 name="preparationType"
                 error={!!touched.preparationType && !!errors.preparationType}
                 helperText={touched.preparationType && errors.preparationType}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
               />
               <TextField
                 fullWidth
@@ -165,20 +228,46 @@ const Form = () => {
                 name="fee"
                 error={!!touched.fee && !!errors.fee}
                 helperText={touched.fee && errors.fee}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Time"
+                label="Shift Time"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.time}
-                name="time"
-                error={!!touched.time && !!errors.time}
-                helperText={touched.time && errors.time}
-                sx={{ gridColumn: "span 4" }}
+                value={values.shiftTime}
+                name="shiftTime"
+                error={!!touched.shiftTime && !!errors.shiftTime}
+                helperText={touched.shiftTime && errors.shiftTime}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Pin Code"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.pinCode}
+                name="pinCode"
+                error={!!touched.pinCode && !!errors.pinCode}
+                helperText={touched.pinCode && errors.pinCode}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="District"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.district}
+                name="district"
+                error={!!touched.district && !!errors.district}
+                helperText={touched.district && errors.district}
+                sx={{ gridColumn: isNonMobile ? "span 2" : "span 4" }}
               />
               <FormControl
                 fullWidth
@@ -216,29 +305,44 @@ const phoneRegExp =
 const checkoutSchema = yup.object().shape({
   registrationNumber: yup.string().required("required"),
   name: yup.string().required("required"),
-  age: yup.number().required("required").positive().integer(),
+  fatherName: yup.string().required("required"),
+  gender: yup.string().required("required"),
+  dob: yup.string().required("required"),
   phoneNo: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("required"),
+  guardianPhoneNo: yup
     .string()
     .matches(phoneRegExp, "Phone number is not valid")
     .required("required"),
   email: yup.string().email("invalid email").required("required"),
   address: yup.string().required("required"),
+  qualification: yup.string().required("required"),
   preparationType: yup.string().required("required"),
   fee: yup.number().required("required").positive(),
-  time: yup.string().required("required"),
+  shiftTime: yup.string().required("required"),
+  pinCode: yup.number().required("required").positive().integer(),
+  district: yup.string().required("required"),
   status: yup.string().required("required"),
 });
 
 const initialValues = {
   registrationNumber: "",
   name: "",
-  age: "",
+  fatherName: "",
+  gender: "",
+  dob: "",
   phoneNo: "",
+  guardianPhoneNo: "",
   email: "",
   address: "",
+  qualification: "",
   preparationType: "",
   fee: "",
-  time: "",
+  shiftTime: "",
+  pinCode: "",
+  district: "",
   status: "",
 };
 

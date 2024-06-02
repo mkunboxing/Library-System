@@ -9,7 +9,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -34,11 +33,15 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     setIsLoading(true);
     try {
-      const studentsResponse = await axios.get(`${backendURL}/students/count`);
-      const revenueResponse = await axios.get(`${backendURL}/invoices/revenue`);
-      const profitsResponse = await axios.get(`${backendURL}/invoices/profit`);
-      const invoicesResponse = await axios.get(`${backendURL}/invoices`);
-
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+  
+      const studentsResponse = await axios.get(`${backendURL}/students/count`, config);
+      const revenueResponse = await axios.get(`${backendURL}/invoices/revenue`, config);
+      const profitsResponse = await axios.get(`${backendURL}/invoices/profit`, config);
+      const invoicesResponse = await axios.get(`${backendURL}/invoices`, config);
+  
       setStudentsCount(studentsResponse.data.count);
       setTotalRevenue(revenueResponse.data.totalRevenue);
       setTotalProfits(profitsResponse.data.totalProfit);
@@ -92,6 +95,13 @@ const Dashboard = () => {
     return monthData;
   };
 
+  // Function to get the latest 5 invoices
+  const getLatestInvoices = () => {
+    return invoiceData
+      .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date descending
+      .slice(0, 5); // Get the first 5 elements
+  };
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -102,21 +112,6 @@ const Dashboard = () => {
         flexDirection={isMobile ? "column" : "row"}
       >
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
-        {/* <Box mt={isMobile ? 2 : 0}>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box> */}
       </Box>
 
       {/* GRID & CHARTS */}
@@ -212,11 +207,6 @@ const Dashboard = () => {
               </Typography>
             </Box>
             <Box>
-              {/* <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton> */}
             </Box>
           </Box>
           <Box height="75%" width="100%" m="0">
@@ -226,6 +216,8 @@ const Dashboard = () => {
             {/* Adjust the height prop here */}
           </Box>
         </Box>
+
+        {/* Recent Transactions */}
         <Box
           gridColumn={isMobile ? "span 12" : "span 4"}
           gridRow={isMobile ? "auto" : "span 2"}
@@ -244,34 +236,43 @@ const Dashboard = () => {
               Recent Transactions
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {getLatestInvoices().map((invoice, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+              key={`${invoice._id}-${i}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               borderBottom={`4px solid ${colors.primary[500]}`}
               p="15px"
+              // backgroundColor={
+              //   invoice.type.toLowerCase() === "expense"
+              //     ? colors.redAccent[500]
+              //     : colors.greenAccent[500]
+              // }
             >
               <Box>
                 <Typography
-                  color={colors.greenAccent[500]}
+                  color={invoice.type.toLowerCase() === "expense"
+                  ? colors.redAccent[500]
+                  : colors.greenAccent[500]}
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
+                  {invoice.type}
                 </Typography>
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {invoice.name}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>{new Date(invoice.date).toLocaleDateString()}</Box>
               <Box
-                backgroundColor={colors.greenAccent[500]}
+                backgroundColor={invoice.type.toLowerCase() === "expense"
+                  ? colors.redAccent[500]
+                  : colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                ₹{invoice.amount}
               </Box>
             </Box>
           ))}

@@ -38,7 +38,10 @@ const Contacts = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${backendURL}/students`);
+        const config = {
+          withCredentials: true, // Include credentials with requests
+        };
+        const response = await axios.get(`${backendURL}/students`, config);
         // Add Serial No to each row
         setRows(response.data);
         setLoading(false);
@@ -78,7 +81,10 @@ const Contacts = () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
     try {
-      await axios.put(`${backendURL}/students/${newRow._id}`, newRow);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      await axios.put(`${backendURL}/students/${newRow._id}`, newRow, config);
       setSnackbar({
         children: "User successfully Updated",
         severity: "success",
@@ -103,7 +109,10 @@ const Contacts = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${backendURL}/students/${deleteRowId}`);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      await axios.delete(`${backendURL}/students/${deleteRowId}`, config);
       setRows((prevRows) => prevRows.filter((row) => row._id !== deleteRowId));
       setSnackbar({
         children: "User successfully deleted",

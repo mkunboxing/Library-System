@@ -7,7 +7,7 @@ import Team from "../pages/team";
 import Invoices from "../pages/invoices";
 import Contacts from "../pages/StudentList";
 import Form from "../pages/addStudents";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider,Box } from "@mui/material";
 import { ColorModeContext, useMode } from "../theme";
 import Calendar from "../pages/calendar/calendar";
 import LoadingBar from "./LoadingBar";
@@ -16,7 +16,8 @@ import { LoadingProvider } from '../LoadingContext';
 
 
 
-function Home() {
+function Home({userDetails}) {
+  // const user = userDetails.user; 
   const [theme, colorMode] = useMode();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -26,13 +27,14 @@ function Home() {
       <LoadingProvider>
         <CssBaseline />
         <div className="app">
-          <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
+        <Box >
+        <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
+        </Box>
           <main className="content">
-            
-            
-            <Topbar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
+          <Box>
+          <Topbar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
             <LoadingBar />
-            
+          </Box>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />

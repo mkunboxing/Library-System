@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,38 +11,18 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider,signInWithPopup } from 'firebase/auth';
-import { app } from '../firebase';
 import GoogleIcon from '@mui/icons-material/Google';
 
 const theme = createTheme();
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-
 
 export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(userCredential);
-      alert('User Created Successfully');
-      setEmail(''); // Clear email field
-      setPassword(''); // Clear password field
-      navigate('/dashboard'); 
-    } catch (error) {
-      console.error('Error creating user:', error);
-      setError(error.message);
-    }
-  };
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   const handleGoogleSignUp = async () => {
-    signInWithPopup(auth, googleProvider);
+    // signInWithPopup(auth, googleProvider);
+    window.open(`${backendURL}/auth/google/callback`, "_self");
   }
 
   return (
@@ -68,8 +48,8 @@ export default function SignUp() {
                 {error}
               </Typography>
             )}
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-              <TextField
+            <Box component="form"  noValidate sx={{ mt: 1 }}>
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -100,7 +80,7 @@ export default function SignUp() {
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign Up
-              </Button>
+              </Button> */}
                   <Button
                     fullWidth
                     variant="contained"
@@ -113,13 +93,13 @@ export default function SignUp() {
                   </Button>
               <Grid container>
                 <Grid item>
-                  <Link
+                  {/* <Link
                     component="button"
                     variant="body2"
                     onClick={() => navigate('/signin')}
                   >
                     {"Already have an account? Sign In"}
-                  </Link>
+                  </Link> */}
                 </Grid>
               </Grid>
             </Box>

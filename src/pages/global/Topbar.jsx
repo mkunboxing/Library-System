@@ -6,27 +6,20 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getAuth, signOut } from "firebase/auth";
+import axios from "axios";
 
-const auth = getAuth();
-const Topbar = ({ isCollapsed, setIsCollapsed }) => {
+const Topbar = ({ isCollapsed, setIsCollapsed, logout }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    window.open(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`, "_self");
   };
 
   return (
-    <Box  backgroundColor={colors.primary[400]} display="flex" justifyContent="space-between" p={1}>
+    <Box backgroundColor={colors.primary[400]} display="flex" justifyContent="space-between" p={1}>
       <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
         <MenuOutlinedIcon />
       </IconButton>

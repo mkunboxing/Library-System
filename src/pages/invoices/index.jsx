@@ -59,7 +59,10 @@ const Invoices = () => {
   const fetchInvoices = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${backendURL}/invoices`);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      const response = await axios.get(`${backendURL}/invoices`, config);
       setInvoices(response.data);
       setLoading(false);
     } catch (error) {
@@ -107,7 +110,10 @@ const Invoices = () => {
     e.preventDefault();
     if (editMode) {
       try {
-        await axios.put(`${backendURL}/invoices/${editId}`, formData);
+        const config = {
+          withCredentials: true, // Include credentials with requests
+        };
+        await axios.put(`${backendURL}/invoices/${editId}`, formData, config);
         fetchInvoices();
         setSnackbarMessage("Invoice updated successfully!");
         setSnackbarSeverity("success");
@@ -118,7 +124,10 @@ const Invoices = () => {
       }
     } else {
       try {
-        await axios.post(`${backendURL}/invoices`, formData);
+        const config = {
+          withCredentials: true, // Include credentials with requests
+        };
+        await axios.post(`${backendURL}/invoices`, formData, config);
         fetchInvoices();
         setSnackbarMessage("Invoice added successfully!");
         setSnackbarSeverity("success");
@@ -149,7 +158,10 @@ const Invoices = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${backendURL}/invoices/${id}`);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      await axios.delete(`${backendURL}/invoices/${id}`, config);
       fetchInvoices();
       setSnackbarMessage("Invoice deleted successfully!");
       setSnackbarSeverity("success");

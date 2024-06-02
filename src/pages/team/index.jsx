@@ -51,7 +51,10 @@ const Team = () => {
   const fetchStaff = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${backendURL}/staff`);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      const response = await axios.get(`${backendURL}/staff`, config);
       setStaff(response.data);
       setLoading(false);
     } catch (error) {
@@ -92,7 +95,10 @@ const Team = () => {
     e.preventDefault();
     if (editMode) {
       try {
-        await axios.put(`${backendURL}/staff/${editId}`, formData);
+        const config = {
+          withCredentials: true, // Include credentials with requests
+        };
+        await axios.put(`${backendURL}/staff/${editId}`, formData, config);
         fetchStaff();
         setSnackbarMessage("Staff updated successfully!");
         setSnackbarSeverity("success");
@@ -105,7 +111,10 @@ const Team = () => {
       }
     } else {
       try {
-        await axios.post(`${backendURL}/staff`, formData);
+        const config = {
+          withCredentials: true, // Include credentials with requests
+        };
+        await axios.post(`${backendURL}/staff`, formData, config);
         fetchStaff();
         setSnackbarMessage("Staff added successfully!");
         setSnackbarSeverity("success");
@@ -137,7 +146,10 @@ const Team = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${backendURL}/staff/${id}`);
+      const config = {
+        withCredentials: true, // Include credentials with requests
+      };
+      await axios.delete(`${backendURL}/staff/${id}`, config);
       fetchStaff();
       setSnackbarMessage("Staff deleted successfully!");
       setSnackbarSeverity("success");
