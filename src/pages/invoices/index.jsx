@@ -60,7 +60,12 @@ const Invoices = () => {
     setIsLoading(true);
     try {
       const config = {
-        withCredentials: true, // Include credentials with requests
+        withCredentials: true,
+        headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          }, // Include credentials with requests
       };
       const response = await axios.get(`${backendURL}/invoices`, config);
       setInvoices(response.data);
@@ -111,7 +116,12 @@ const Invoices = () => {
     if (editMode) {
       try {
         const config = {
-          withCredentials: true, // Include credentials with requests
+          withCredentials: true,
+          headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          }, // Include credentials with requests
         };
         await axios.put(`${backendURL}/invoices/${editId}`, formData, config);
         fetchInvoices();
@@ -125,7 +135,12 @@ const Invoices = () => {
     } else {
       try {
         const config = {
-          withCredentials: true, // Include credentials with requests
+          withCredentials: true,
+          headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          }, // Include credentials with requests
         };
         await axios.post(`${backendURL}/invoices`, formData, config);
         fetchInvoices();
@@ -159,7 +174,12 @@ const Invoices = () => {
   const handleDelete = async (id) => {
     try {
       const config = {
-        withCredentials: true, // Include credentials with requests
+        withCredentials: true,
+        headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          },
       };
       await axios.delete(`${backendURL}/invoices/${id}`, config);
       fetchInvoices();

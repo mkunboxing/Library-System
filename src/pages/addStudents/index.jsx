@@ -25,7 +25,12 @@ const Form = () => {
     values.registrationNumber = generateRegistrationNumber(); // Regenerate registration number
     try {
       const config = {
-        withCredentials: true, // Include credentials with requests
+        withCredentials: true,
+        headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          }, // Include credentials with requests
       };
       const response = await axios.post(`${backendURL}/students`, values, config);
       console.log(response.data);

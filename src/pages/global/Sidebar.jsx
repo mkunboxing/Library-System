@@ -65,7 +65,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         setSelected("Calendar");
         setIsCollapsed(isMobile);
         break;
-      default:
+      default :
         setSelected("Dashboard");
         setIsCollapsed(isMobile);
     }
@@ -127,7 +127,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
             <Box paddingLeft={isCollapsed ? undefined : "5%"}>
               <Item
                 title="Dashboard"
-                to="/"
+                to="/dashboard"
                 icon={<HomeOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}

@@ -11,21 +11,36 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import { getAuth, GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword } from 'firebase/auth';
-// import { app } from '../firebase';
 import GoogleIcon from '@mui/icons-material/Google'; 
+import axios from 'axios';
+import Home from './Home';
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   const handleGoogleSignUp = async () => {
-    // signInWithPopup(auth, googleProvider);
     window.open(`${backendURL}/auth/google/callback`, "_self");
+  }
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${backendURL}/auth/login`, { email, password });
+      const { token, user, redirectUrl } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.error('Error signing in:', error);
+      setError('Failed to sign in');
+    }
   }
 
   return (
@@ -51,8 +66,8 @@ export default function SignIn() {
                 {error}
               </Typography>
             )}
-            <Box component="form"  noValidate sx={{ mt: 1 }}>
-              {/* <TextField
+            <Box component="form"  noValidate onSubmit={handleSignIn} sx={{ mt: 1 }}>
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -83,18 +98,17 @@ export default function SignIn() {
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
-              </Button> */}
-                  <Button
+              </Button>
+                  {/* <Button
                     fullWidth
                     variant="contained"
                     color="error"
                     sx={{ mt: 1, mb: 2 }}
                     startIcon={<GoogleIcon />}
                     onClick={handleGoogleSignUp}
-                    
                   >
                     Sign in with Google
-                  </Button>
+                  </Button> */}
                 
               
               <Grid container>

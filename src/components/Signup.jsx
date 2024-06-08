@@ -16,7 +16,8 @@ const theme = createTheme();
 
 export default function SignUp() {
   const [formData, setFormData] = React.useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: ''
   });
@@ -29,21 +30,15 @@ export default function SignUp() {
 
   const handleSignUp = async () => {
     try {
-      const res = await axios.post('/auth/signup', formData);
-      const { token, user } = res.data;
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, formData);
+      const { token, user, redirectUrl } = res.data;
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      navigate('/dashboard');
+      window.location.href = redirectUrl;
     } catch (error) {
       console.error('Error signing up:', error);
       setError('Failed to sign up');
     }
-  };
-  
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
-  const handleLogin = () => {
-    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (
@@ -74,14 +69,15 @@ export default function SignUp() {
               margin="normal"
               required
               fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
+              id="firstName"
+              label="FullName"
+              name="firstName"
+              autoComplete="fname"
               autoFocus
-              value={formData.name}
+              value={formData.firstName}
               onChange={handleChange}
             />
+    
             <TextField
               margin="normal"
               required
@@ -110,7 +106,7 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleLogin}
+              onClick={handleSignUp}
             >
               Sign Up
             </Button>

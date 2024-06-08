@@ -19,7 +19,7 @@ const Topbar = ({ isCollapsed, setIsCollapsed }) => {
   const handleLogout = async () => {
     try {
       await logout(); // Call the logout function from the useAuth hook
-      navigate('/signup'); // Redirect to signup after logout
+      navigate('/'); // Redirect to signup after logout
     } catch (err) {
       console.error('Error during logout', err);
     }

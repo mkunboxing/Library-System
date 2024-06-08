@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useLoading } from "../../LoadingContext";
 
+import { useAuth } from "../../context/AuthContext";
+
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -30,6 +32,7 @@ const Contacts = () => {
   const noButtonRef = useRef(null);
   const navigate = useNavigate();
 
+  const { user } = useAuth();
   const { setIsLoading } = useLoading();
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
@@ -38,18 +41,22 @@ const Contacts = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const config = {
-          withCredentials: true, // Include credentials with requests
-        };
-        const response = await axios.get(`${backendURL}/students`, config);
-        // Add Serial No to each row
+        // Retrieve the libraryId from localStorage
+        const libraryId = JSON.parse(localStorage.getItem("user")).libraryId;
+        const response = await axios.get(`${backendURL}/students`, {
+          headers: {
+            libraryId: libraryId,
+          },
+        });
+
+        // Set rows with the response data
         setRows(response.data);
         setLoading(false);
+        // Log the libraryId
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
-      }
-      finally {
+      } finally {
         setIsLoading(false);
       }
     };
@@ -269,7 +276,7 @@ const Contacts = () => {
   ];
 
   return (
-    <Box sx={{overflowY:"hidden"}} m={"15px"}>
+    <Box sx={{ overflowY: "hidden" }} m={"15px"}>
       <Box display="flex" flexDirection="column">
         <Box>
           <Header
@@ -294,7 +301,9 @@ const Contacts = () => {
         // width={"100%"}
         minWidth={800}
         sx={{
-          width :"100%", overflowX:"auto", minWidth: "800px",
+          width: "100%",
+          overflowX: "auto",
+          minWidth: "800px",
           "& .MuiDataGrid-root": {
             border: "none",
           },

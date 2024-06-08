@@ -52,7 +52,12 @@ const Team = () => {
     setIsLoading(true);
     try {
       const config = {
-        withCredentials: true, // Include credentials with requests
+        withCredentials: true,
+        headers: {
+          libraryId: localStorage.getItem("user")
+            ? JSON.parse(localStorage.getItem("user")).libraryId
+            : null,
+        },
       };
       const response = await axios.get(`${backendURL}/staff`, config);
       setStaff(response.data);
@@ -60,7 +65,7 @@ const Team = () => {
     } catch (error) {
       console.error("Error fetching staff data:", error);
       setLoading(false);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -96,7 +101,12 @@ const Team = () => {
     if (editMode) {
       try {
         const config = {
-          withCredentials: true, // Include credentials with requests
+          withCredentials: true,
+          headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          }, // Include credentials with requests
         };
         await axios.put(`${backendURL}/staff/${editId}`, formData, config);
         fetchStaff();
@@ -112,7 +122,12 @@ const Team = () => {
     } else {
       try {
         const config = {
-          withCredentials: true, // Include credentials with requests
+          withCredentials: true,
+          headers: {
+            libraryId: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).libraryId
+              : null,
+          },
         };
         await axios.post(`${backendURL}/staff`, formData, config);
         fetchStaff();
@@ -147,6 +162,11 @@ const Team = () => {
   const handleDelete = async (id) => {
     try {
       const config = {
+        headers: {
+          libraryId: localStorage.getItem("user")
+            ? JSON.parse(localStorage.getItem("user")).libraryId
+            : null,
+        },
         withCredentials: true, // Include credentials with requests
       };
       await axios.delete(`${backendURL}/staff/${id}`, config);
@@ -166,8 +186,7 @@ const Team = () => {
     {
       field: "srNo",
       headerName: "Sr. No.",
-      valueGetter: (params) =>
-        `${params.api.getRowIndex(params.row._id) + 1}`,
+      valueGetter: (params) => `${params.api.getRowIndex(params.row._id) + 1}`,
       width: 80,
     },
     {
@@ -233,7 +252,7 @@ const Team = () => {
   ];
 
   return (
-    <Box sx={{overflowY:"hidden"}} m="15px">
+    <Box sx={{ overflowY: "hidden" }} m="15px">
       <Box display="flex" flexDirection="column">
         <Box>
           <Header title="STAFF" subtitle="List of Staff Members" />
@@ -272,9 +291,10 @@ const Team = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell": {
-            // overflow: `visible !important`,
-          },
+          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
+            {
+              // overflow: `visible !important`,
+            },
         }}
       >
         <DataGrid
@@ -344,11 +364,7 @@ const Team = () => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit}
-            color="secondary"
-            variant="contained"
-          >
+          <Button onClick={handleSubmit} color="secondary" variant="contained">
             {editMode ? "Update" : "Add"}
           </Button>
         </DialogActions>
@@ -362,7 +378,7 @@ const Team = () => {
         <Alert
           onClose={() => setSnackbarOpen(false)}
           severity={snackbarSeverity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbarMessage}
         </Alert>

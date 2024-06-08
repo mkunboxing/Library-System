@@ -33,9 +33,12 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     setIsLoading(true);
     try {
-      const config = {
-        withCredentials: true, // Include credentials with requests
-      };
+       const config = {
+      withCredentials: true, // Include credentials with requests
+      headers: {
+        libraryId: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).libraryId : null
+      }
+    };
   
       const studentsResponse = await axios.get(`${backendURL}/students/count`, config);
       const revenueResponse = await axios.get(`${backendURL}/invoices/revenue`, config);
