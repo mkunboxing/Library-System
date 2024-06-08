@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = async () => {
-    await axios.get('/api/logout');
+    await axios.get(`${backendUrl}/api/logout`);
     setUser(null);
   };
 
