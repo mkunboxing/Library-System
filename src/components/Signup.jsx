@@ -9,7 +9,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import GoogleLoginButton from '../GoogleLogin'; // Import GoogleLoginButton component
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
@@ -40,9 +39,11 @@ export default function SignUp() {
       setError('Failed to sign up');
     }
   };
+  
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleLogin = () => {
-    window.location.href = 'http://localhost:8000/auth/google';
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (

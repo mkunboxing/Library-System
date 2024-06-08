@@ -8,12 +8,15 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('/api/current_user');
+        const res = await axios.get(`${backendUrl}/api/current_user`);
+        console.log("log from authContext", res.data);
         setUser(res.data);
-        console.log(res.data);
+        console.log(user, "this is from authContext");
       } catch (err) {
         console.error(err);
       }
