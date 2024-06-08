@@ -7,15 +7,22 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext"; // Import the useAuth hook
 
-const Topbar = ({ isCollapsed, setIsCollapsed, logout }) => {
+const Topbar = ({ isCollapsed, setIsCollapsed }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Use the useAuth hook to access logout function
 
-  const handleLogout = () => {
-    window.open(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`, "_self");
+  const handleLogout = async () => {
+    try {
+      await logout(); // Call the logout function from the useAuth hook
+      navigate('/signup'); // Redirect to signup after logout
+    } catch (err) {
+      console.error('Error during logout', err);
+    }
   };
 
   return (

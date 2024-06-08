@@ -1,20 +1,23 @@
-import React, { useContext } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import SignIn from "./components/Signin";
 import SignUp from "./components/Signup";
 import Home from "./components/Home";
-import { UserContext } from "./UserContext"
-
+import axios from "axios";
+// import { useUser } from "./UserContext";
+import { useAuth} from './context/AuthContext';  
 
 function App() {
-  const { user } = useContext(UserContext);
+  const { user } = useAuth();
+  console.log(user);
+
   if (user) {
-    // console.log(user)
-    return <Home user={user} />;
+    return <Home/>;
   }
+
   return (
     <Routes>
-      <Route path="/signin" element={<SignIn />} />
+      {/* <Route path="/signin" element={<SignIn />} /> */}
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<SignUp />} />
     </Routes>
