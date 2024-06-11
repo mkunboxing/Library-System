@@ -6,7 +6,6 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext"; // Import the useAuth hook
 
 const Topbar = ({ isCollapsed, setIsCollapsed }) => {
@@ -35,8 +34,8 @@ const Topbar = ({ isCollapsed, setIsCollapsed }) => {
         <IconButton onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
         </IconButton>
-        <IconButton sx={{ marginRight: "10px" }}>
-          <LogoutIcon onClick={handleLogout} />
+        <IconButton onClick={handleLogout} sx={{ marginRight: "10px" }}>
+          <LogoutIcon />
         </IconButton>
       </Box>
     </Box>

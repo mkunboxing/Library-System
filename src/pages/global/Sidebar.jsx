@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Avatar } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -43,10 +43,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     setIsCollapsed(isMobile);
   }, [isMobile]);
 
-  useEffect(() => {
+  useEffect(() => { // this is for selecting the correct sidebar item when the page changes
     switch (location.pathname) {
       case "/form":
-        setSelected("Profile Form");
+        setSelected("Add Students");
         setIsCollapsed(isMobile);
         break;
       case "/team":
@@ -58,7 +58,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         setIsCollapsed(isMobile);
         break;
       case "/invoices":
-        setSelected("Invoices Balances");
+        setSelected("Invoices List");
         setIsCollapsed(isMobile);
         break;
       case "/calendar":
@@ -100,13 +100,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
             {!isCollapsed && (
               <Box mb="25px">
                 <Box display="flex" justifyContent="center" alignItems="center">
-                  <img
-                    alt="profile-user"
-                    width="100px"
-                    height="100px"
-                    src={user?.image} // Use user's profile picture
-                    style={{ cursor: "pointer", borderRadius: "50%" }}
-                  />
+                <Avatar sx={{ width: "100px", height: "100px" }} src="../../assets/logo512.png" ></Avatar>
                 </Box>
                 <Box textAlign="center">
                   <Typography
@@ -155,7 +149,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                 setSelected={setSelected}
               />
               <Item
-                title="Invoices Balances"
+                title="Invoices List"
                 to="/invoices"
                 icon={<ReceiptOutlinedIcon />}
                 selected={selected}
@@ -170,7 +164,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                 Pages
               </Typography>
               <Item
-                title="Profile Form"
+                title="Add Students"
                 to="/form"
                 icon={<PersonOutlinedIcon />}
                 selected={selected}
@@ -188,7 +182,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                 color={colors.grey[300]}
                 sx={{ m: "15px 0 5px 20px" }}
               >
-                Charts
+                {/* Charts */}
               </Typography>
             </Box>
           </Menu>

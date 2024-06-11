@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -10,25 +10,56 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const [formData, setFormData] = React.useState({
-    firstName: '',
-    lastName: '',
+  const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: ''
   });
-  const [error, setError] = React.useState('');
+  const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Password should be at least 8 characters long and contain at least one number
+    const re = /^(?=.*\d).{8,}$/;
+    return re.test(password);
+  };
+
   const handleSignUp = async () => {
+    setError('');
+    setEmailError('');
+    setPasswordError('');
+
+    if (!validateEmail(formData.email)) {
+      setEmailError('Invalid email address');
+      return;
+    }
+
+    if (!validatePassword(formData.password)) {
+      setPasswordError('Password must be at least 8 characters long and contain at least one number');
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, formData);
       const { token, user, redirectUrl } = res.data;
@@ -37,7 +68,8 @@ export default function SignUp() {
       window.location.href = redirectUrl;
     } catch (error) {
       console.error('Error signing up:', error);
-      setError('Failed to sign up');
+      setError(error.response ? error.response.data : 'Failed to sign up');
+      setLoading(false);
     }
   };
 
@@ -60,24 +92,25 @@ export default function SignUp() {
             Sign Up
           </Typography>
           {error && (
-            <Typography color="error" variant="body2">
+            <Alert severity="error" sx={{ width: '100%' }}>
               {error}
-            </Typography>
+            </Alert>
           )}
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="firstName"
-              label="FullName"
-              name="firstName"
+              id="name"
+              label="Full Name"
+              name="name"
               autoComplete="fname"
               autoFocus
-              value={formData.firstName}
+              value={formData.name}
               onChange={handleChange}
+              error={!!error}
+              // helperText="required Full Name"
             />
-    
             <TextField
               margin="normal"
               required
@@ -88,6 +121,8 @@ export default function SignUp() {
               autoComplete="email"
               value={formData.email}
               onChange={handleChange}
+              error={!!emailError}
+              helperText={emailError}
             />
             <TextField
               margin="normal"
@@ -100,6 +135,8 @@ export default function SignUp() {
               autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
+              error={!!passwordError}
+              helperText={passwordError}
             />
             <Button
               fullWidth
@@ -123,6 +160,12 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </ThemeProvider>
   );
 }
