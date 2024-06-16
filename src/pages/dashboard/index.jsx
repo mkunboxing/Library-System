@@ -36,6 +36,7 @@ const Dashboard = () => {
        const config = {
       withCredentials: true, // Include credentials with requests
       headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
         libraryId: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).libraryId : null
       }
     };

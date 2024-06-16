@@ -52,6 +52,17 @@ const Invoices = () => {
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
+  const config = {
+    // Include credentials with requests
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      libraryId: localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user")).libraryId
+        : null,
+    },
+  };
+
   useEffect(() => {
     fetchInvoices();
   }, []);
@@ -59,14 +70,6 @@ const Invoices = () => {
   const fetchInvoices = async () => {
     setIsLoading(true);
     try {
-      const config = {
-        withCredentials: true,
-        headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          }, // Include credentials with requests
-      };
       const response = await axios.get(`${backendURL}/invoices`, config);
       setInvoices(response.data);
       setLoading(false);
@@ -115,14 +118,6 @@ const Invoices = () => {
     e.preventDefault();
     if (editMode) {
       try {
-        const config = {
-          withCredentials: true,
-          headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          }, // Include credentials with requests
-        };
         await axios.put(`${backendURL}/invoices/${editId}`, formData, config);
         fetchInvoices();
         setSnackbarMessage("Invoice updated successfully!");
@@ -134,14 +129,6 @@ const Invoices = () => {
       }
     } else {
       try {
-        const config = {
-          withCredentials: true,
-          headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          }, // Include credentials with requests
-        };
         await axios.post(`${backendURL}/invoices`, formData, config);
         fetchInvoices();
         setSnackbarMessage("Invoice added successfully!");
@@ -173,14 +160,6 @@ const Invoices = () => {
 
   const handleDelete = async (id) => {
     try {
-      const config = {
-        withCredentials: true,
-        headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          },
-      };
       await axios.delete(`${backendURL}/invoices/${id}`, config);
       fetchInvoices();
       setSnackbarMessage("Invoice deleted successfully!");
@@ -267,7 +246,7 @@ const Invoices = () => {
   ];
 
   return (
-    <Box sx={{overflowY:"hidden"}} m="15px">
+    <Box sx={{ overflowY: "hidden" }} m="15px">
       <Box display="flex" flexDirection={"column"}>
         <Box>
           <Header title="INVOICES" subtitle="List of Invoices" />

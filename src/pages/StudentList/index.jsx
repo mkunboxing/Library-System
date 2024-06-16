@@ -45,6 +45,7 @@ const Contacts = () => {
         const libraryId = JSON.parse(localStorage.getItem("user")).libraryId;
         const response = await axios.get(`${backendURL}/students`, {
           headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
             libraryId: libraryId,
           },
         });

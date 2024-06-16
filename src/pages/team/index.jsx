@@ -44,6 +44,16 @@ const Team = () => {
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      libraryId: localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user")).libraryId
+        : null,
+    },
+    withCredentials: true, // Include credentials with requests
+  };
+
   useEffect(() => {
     fetchStaff();
   }, []);
@@ -51,14 +61,6 @@ const Team = () => {
   const fetchStaff = async () => {
     setIsLoading(true);
     try {
-      const config = {
-        withCredentials: true,
-        headers: {
-          libraryId: localStorage.getItem("user")
-            ? JSON.parse(localStorage.getItem("user")).libraryId
-            : null,
-        },
-      };
       const response = await axios.get(`${backendURL}/staff`, config);
       setStaff(response.data);
       setLoading(false);
@@ -100,14 +102,6 @@ const Team = () => {
     e.preventDefault();
     if (editMode) {
       try {
-        const config = {
-          withCredentials: true,
-          headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          }, // Include credentials with requests
-        };
         await axios.put(`${backendURL}/staff/${editId}`, formData, config);
         fetchStaff();
         setSnackbarMessage("Staff updated successfully!");
@@ -121,14 +115,6 @@ const Team = () => {
       }
     } else {
       try {
-        const config = {
-          withCredentials: true,
-          headers: {
-            libraryId: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).libraryId
-              : null,
-          },
-        };
         await axios.post(`${backendURL}/staff`, formData, config);
         fetchStaff();
         setSnackbarMessage("Staff added successfully!");
@@ -161,14 +147,6 @@ const Team = () => {
 
   const handleDelete = async (id) => {
     try {
-      const config = {
-        headers: {
-          libraryId: localStorage.getItem("user")
-            ? JSON.parse(localStorage.getItem("user")).libraryId
-            : null,
-        },
-        withCredentials: true, // Include credentials with requests
-      };
       await axios.delete(`${backendURL}/staff/${id}`, config);
       fetchStaff();
       setSnackbarMessage("Staff deleted successfully!");

@@ -27,6 +27,7 @@ const Form = () => {
       const config = {
         withCredentials: true,
         headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
             libraryId: localStorage.getItem("user")
               ? JSON.parse(localStorage.getItem("user")).libraryId
               : null,
