@@ -37,18 +37,23 @@ const Contacts = () => {
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
+  const config = {
+    // Include credentials with requests
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      libraryId: localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user")).libraryId
+        : null,
+    },
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         // Retrieve the libraryId from localStorage
-        const libraryId = JSON.parse(localStorage.getItem("user")).libraryId;
-        const response = await axios.get(`${backendURL}/students`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            libraryId: libraryId,
-          },
-        });
+        const response = await axios.get(`${backendURL}/students`, config);
 
         // Set rows with the response data
         setRows(response.data);
@@ -89,9 +94,6 @@ const Contacts = () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
     try {
-      const config = {
-        withCredentials: true, // Include credentials with requests
-      };
       await axios.put(`${backendURL}/students/${newRow._id}`, newRow, config);
       setSnackbar({
         children: "User successfully Updated",
@@ -117,9 +119,6 @@ const Contacts = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const config = {
-        withCredentials: true, // Include credentials with requests
-      };
       await axios.delete(`${backendURL}/students/${deleteRowId}`, config);
       setRows((prevRows) => prevRows.filter((row) => row._id !== deleteRowId));
       setSnackbar({
@@ -191,12 +190,12 @@ const Contacts = () => {
     {
       field: "registrationNumber",
       headerName: "Reg.No",
-      flex: 0.5,
+      flex: 0.8,
     },
     {
       field: "name",
       headerName: "Name",
-      flex: 0.9,
+      flex: 0.8,
       // minWidth: 100,
       headerAlign: "left",
       align: "left",
@@ -204,12 +203,12 @@ const Contacts = () => {
       editable: true,
     },
     {
-      field: "age",
-      headerName: "Age",
+      field: "dob",
+      headerName: "DOB",
       type: "number",
-      headerAlign: "center",
-      align: "center",
-      flex: 0.2,
+      headerAlign: "left",
+      align: "left",
+      flex: 0.5,
       editable: true,
       // hide: true,
     },
@@ -229,9 +228,16 @@ const Contacts = () => {
       hide: true,
     },
     {
+      field: "gender",
+      headerName: "gender",
+      flex: 0.3,
+      editable: true,
+      hide: true,
+    },
+    {
       field: "address",
       headerName: "Address",
-      flex: 0.5,
+      flex: 0.8,
       editable: true,
       // headerAlign: "center",
       // align: "center",
@@ -239,9 +245,7 @@ const Contacts = () => {
     {
       field: "preparationType",
       headerName: "Preparation Type",
-      headerAlign: "center",
-      align: "center",
-      flex: 0.5,
+      flex: 0.7,
       editable: true,
     },
     {
@@ -250,10 +254,10 @@ const Contacts = () => {
       type: "number",
       headerAlign: "left",
       align: "left",
-      flex: 0.1,
+      flex: 0.3,
       editable: true,
     },
-    { field: "time", headerName: "Time", flex: 0.5, editable: true },
+    { field: "shiftTime", headerName: "Time", flex: 0.5, editable: true },
     { field: "status", headerName: "Status", flex: 0.3, editable: true },
     {
       field: "actions",
@@ -300,11 +304,11 @@ const Contacts = () => {
         height={"70vh"}
         // overflow={"visible"}
         // width={"100%"}
-        minWidth={800}
+        minWidth={1000}
         sx={{
-          width: "100%",
-          overflowX: "auto",
-          minWidth: "800px",
+          // width: "100%",
+          // overflowX: "auto",
+          // minWidth: "800px",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -364,15 +368,18 @@ const Contacts = () => {
             toolbar: {
               csvOptions: {
                 fields: [
-                  "serialNo",
+                  "Sr. No.",
                   "registrationNumber",
                   "name",
-                  "age",
+                  "fatherName",
+                  "gender",
+                  "email",
+                  "dob",
                   "phoneNo",
                   "address",
                   "preparationType",
                   "fee",
-                  "time",
+                  "shiftTime",
                 ],
               },
             },

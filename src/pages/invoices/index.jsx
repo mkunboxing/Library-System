@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -49,6 +49,10 @@ const Invoices = () => {
 
   const { setIsLoading } = useLoading();
   const [loading, setLoading] = useState(true);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteInvoiceId, setDeleteInvoiceId] = useState(null);
+  const noButtonRef = useRef(null);
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
@@ -158,9 +162,14 @@ const Invoices = () => {
     handleOpen();
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteClick = (id) => {
+    setDeleteInvoiceId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${backendURL}/invoices/${id}`, config);
+      await axios.delete(`${backendURL}/invoices/${deleteInvoiceId}`, config);
       fetchInvoices();
       setSnackbarMessage("Invoice deleted successfully!");
       setSnackbarSeverity("success");
@@ -170,11 +179,33 @@ const Invoices = () => {
       setSnackbarSeverity("error");
     }
     setSnackbarOpen(true);
+    setDeleteDialogOpen(false);
+    setDeleteInvoiceId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setDeleteInvoiceId(null);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
+  const renderDeleteDialog = () => (
+    <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} maxWidth="xs">
+      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogContent dividers>
+        Are you sure you want to delete this invoice?
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete}>Cancel</Button>
+        <Button onClick={handleConfirmDelete} color="secondary">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   const columns = [
     {
@@ -234,7 +265,7 @@ const Invoices = () => {
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => handleDeleteClick(params.row._id)}
               color="error"
             >
               <DeleteIcon />
@@ -260,7 +291,7 @@ const Invoices = () => {
       <Box
         m="40px 0 0 0"
         height="70vh"
-        minWidth={800}
+        minWidth={1000}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -286,89 +317,83 @@ const Invoices = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
-            {
-              overflow: `visible !important`,
-            },
         }}
       >
-        <DataGrid
-          rows={invoices}
-          columns={columns}
-          getRowId={(row) => row._id}
-          loading={loading}
-        />
+        <DataGrid rows={invoices} columns={columns} getRowId={(row) => row._id} />
       </Box>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Edit Invoice" : "Add New Invoice"}
-        </DialogTitle>
-        <DialogContent>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <FormControl fullWidth sx={{ mb: 2 }}>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle>{editMode ? "Edit Invoice" : "Add New Invoice"}</DialogTitle>
+        <DialogContent dividers>
+          <Box component="form" onSubmit={handleSubmit}>
+            <FormControl fullWidth margin="normal">
               <InputLabel>Type</InputLabel>
               <Select
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                label="Type"
+                required
               >
-                <MenuItem value="expense">Expense</MenuItem>
                 <MenuItem value="profit">Profit</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+                
               </Select>
             </FormControl>
             <TextField
-              fullWidth
+              margin="normal"
               label="Name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              sx={{ mb: 2 }}
+              fullWidth
+              required
             />
             <TextField
-              fullWidth
+              margin="normal"
               label="Amount"
               name="amount"
               value={formData.amount}
               onChange={handleChange}
-              sx={{ mb: 2 }}
-            />
-            <Box sx={{ mb: 2 }}>
-              <DatePicker
-                selected={formData.date}
-                onChange={handleDateChange}
-                customInput={<TextField fullWidth label="Date" />}
-              />
-            </Box>
-            <TextField
               fullWidth
-              label="Phone"
+              required
+            />
+            <TextField
+              margin="normal"
+              label="Phone Number"
               name="phoneNo"
               value={formData.phoneNo}
               onChange={handleChange}
-              sx={{ mb: 2 }}
+              fullWidth
+              required
             />
             <TextField
-              fullWidth
+              margin="normal"
               label="Email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              sx={{ mb: 2 }}
+              fullWidth
+              required
             />
+            <DatePicker
+              selected={formData.date}
+              onChange={handleDateChange}
+              dateFormat="MMMM d, yyyy"
+              className="form-control"
+              required
+            />
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {editMode ? "Update Invoice" : "Add Invoice"}
+            </Button>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} sx={{ color: "white" }}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="secondary" variant="contained">
-            {editMode ? "Update" : "Add"}
-          </Button>
-        </DialogActions>
       </Dialog>
-
+      {renderDeleteDialog()}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

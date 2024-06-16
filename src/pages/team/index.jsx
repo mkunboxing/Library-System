@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Header from "../../components/Header";
 import axios from "axios";
 import { useLoading } from "../../LoadingContext";
+
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,6 +42,9 @@ const Team = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [loading, setLoading] = useState(true);
   const { setIsLoading } = useLoading();
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteStaffId, setDeleteStaffId] = useState(null);
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
@@ -145,20 +149,46 @@ const Team = () => {
     handleOpen();
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteClick = (id) => {
+    setDeleteStaffId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${backendURL}/staff/${id}`, config);
+      await axios.delete(`${backendURL}/staff/${deleteStaffId}`, config);
       fetchStaff();
       setSnackbarMessage("Staff deleted successfully!");
       setSnackbarSeverity("success");
-      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error deleting staff:", error);
       setSnackbarMessage("Error deleting staff.");
       setSnackbarSeverity("error");
-      setSnackbarOpen(true);
     }
+    setSnackbarOpen(true);
+    setDeleteDialogOpen(false);
+    setDeleteStaffId(null);
   };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setDeleteStaffId(null);
+  };
+
+  const renderDeleteDialog = () => (
+    <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} maxWidth="xs">
+      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogContent dividers>
+        Are you sure you want to delete this staff member?
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete}>Cancel</Button>
+        <Button onClick={handleConfirmDelete} color="secondary">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   const columns = [
     {
@@ -218,7 +248,7 @@ const Team = () => {
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => handleDeleteClick(params.row._id)}
               color="error"
             >
               <DeleteIcon />
@@ -244,7 +274,7 @@ const Team = () => {
       <Box
         m="40px 0 0 0"
         height="70vh"
-        minWidth={800}
+        minWidth={1000}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -269,10 +299,6 @@ const Team = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          "& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell":
-            {
-              // overflow: `visible !important`,
-            },
         }}
       >
         <DataGrid
@@ -347,6 +373,8 @@ const Team = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {renderDeleteDialog()}
 
       <Snackbar
         open={snackbarOpen}
