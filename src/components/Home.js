@@ -26,7 +26,7 @@ function Home({ userDetails }) {
             <Box>
               <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
             </Box>
-            <main className="content">
+            <main className="content" >
               <Box>
                 <Topbar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
                 <LoadingBar />

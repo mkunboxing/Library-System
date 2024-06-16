@@ -72,7 +72,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   }, [location.pathname, isMobile, setIsCollapsed]);
 
   return (
-    <Box sx={{ backgroundColor: colors.primary[400], overflowX: "hidden" }}>
+    <Box sx={{ backgroundColor: colors.primary[400], minHeight: "100vh",height: "100%" , overflow: "hidden" }}>
       <Box
         sx={{
           "& .pro-sidebar-inner": {
