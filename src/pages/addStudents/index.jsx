@@ -18,7 +18,6 @@ const Form = () => {
     const seconds = String(now.getSeconds()).padStart(2, '0');
     return `${day}${month}${year}${minutes}${seconds}`;
   };
-
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   const handleFormSubmit = async (values, actions) => {
